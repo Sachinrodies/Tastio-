@@ -1,4 +1,3 @@
-
 import './App.css'
 import Signup from './auth/Signup'
 import Login from './auth/Login'
@@ -9,6 +8,11 @@ import VerifyEmail from './auth/VerifyEmail'
 import Navbar from './components/ui/Navbar'
 import HeroSection from './components/ui/HeroSection'
 import MainLayout from './Layout/MainLayout'
+import Profile from './components/ui/Profile'
+import SearchPage from './components/ui/SearchPage'
+import RestaurantDetails from './components/ui/RestaurantDetails'
+import Cart from './components/ui/Cart'
+import Restaurants from './admin/Restaurants'
 
 const appRouter = createBrowserRouter([
   {
@@ -18,6 +22,28 @@ const appRouter = createBrowserRouter([
       {
         path:'/',
         element:<HeroSection/>
+      },
+      {
+        path:'/profile',
+        element:<Profile/>
+      }
+      ,
+      {
+        path:'/search/:query',
+        element:<SearchPage/>
+      },
+      {
+        path:'/restaurant/:id',
+        element:<RestaurantDetails/>
+      },
+      {
+        path:'/cart',
+        element:<Cart/>
+      },
+      // admin service starts from here
+      {
+        path:'/admin/restaurants',
+        element:<Restaurants/>
       }
     ]
   },

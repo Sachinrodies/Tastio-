@@ -3,9 +3,11 @@ import { Input } from './input'
 import { Search } from 'lucide-react'
 import { Button } from './button'
 import HeroImage from '@/assets/hero_pizza.png'
+import { useNavigate } from 'react-router-dom'
 
 const HeroSection = () => {
-    const [search, setSearch] = useState<string>("")
+    const [search, setSearch] = useState<string>("");
+    const navigate = useNavigate();
     return (
         <div className=" flex  flex-col md:flex-row  max-w-7xl mx-auto md:p-10 rounded-lg items-center justify-center m-4 gap-20">
             <div className="flex flex-col gap-10 md:w[40%]">
@@ -16,9 +18,9 @@ const HeroSection = () => {
                 </div>
                 <div className="relative flex items-center gap-2 ">
 
-                    <Input type="text" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10  shadow-lg" />
+                    <Input type="text" value={search} placeholder="search restaurant by name,city & country" onChange={(e) => setSearch(e.target.value)} className="pl-10  shadow-lg" />
                     <Search className="absolute inset-y-2 left-2 md:left-4 text-gray-600 pointer-events-none" />
-                    <Button className="bg-[#D19254] hover:bg-[#d18c47] ">Search</Button>
+                    <Button  onClick={()=>navigate(`/search/${search}`)} className="bg-[#D19254] hover:bg-[#d18c47] ">Search</Button>
 
 
                 </div>

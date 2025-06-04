@@ -16,7 +16,7 @@ const Navbar = () => {
   const loading = false;
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div>
       <div className="flex items-center justify-between h-16">
         <Link to="/navbar">
           <h1 className="md:font-extrabold text-2xl font-bold">Tastio</h1>
@@ -166,7 +166,7 @@ const MobileNavbar = () => {
             <span>Orders</span>
 
           </Link>
-          <Link to="/profile" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
+          <Link to="/cart" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
             <ShoppingCart />
             <span>Cart(1)</span>
 
@@ -176,7 +176,7 @@ const MobileNavbar = () => {
             <span>Menu</span>
 
           </Link>
-          <Link to="/profile" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
+          <Link to="/admin/restaurants" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
             <UtensilsCrossed />
             <span>Restaurant</span>
 
