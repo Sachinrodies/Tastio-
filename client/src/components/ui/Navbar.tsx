@@ -40,7 +40,7 @@ const Navbar = () => {
                         <MenubarItem>Restaurant</MenubarItem>
                       </Link>
 
-                      <Link to="/admin/menu">
+                      <Link to="/admin/add-menu">
                         <MenubarItem>Menu</MenubarItem>
                       </Link>
                       <Link to="/admin/orders">
@@ -161,7 +161,7 @@ const MobileNavbar = () => {
             <span>Profile</span>
 
           </Link>
-          <Link to="/profile" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
+          <Link to="/orders/status" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
             <HandPlatter />
             <span>Orders</span>
 
@@ -171,7 +171,7 @@ const MobileNavbar = () => {
             <span>Cart(1)</span>
 
           </Link>
-          <Link to="/profile" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
+          <Link to="/admin/add-menu" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
             <SquareMenu/>
             <span>Menu</span>
 
@@ -181,7 +181,7 @@ const MobileNavbar = () => {
             <span>Restaurant</span>
 
           </Link>
-          <Link to="/profile" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
+          <Link to="/admin/orders" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
             <PackageCheck/>
             <span>Restaurant Orders</span>
 
