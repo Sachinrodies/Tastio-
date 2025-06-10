@@ -34,12 +34,12 @@ export const createRestaurant = async (req: Request, res: Response) => {
 }
 export const getRestaurant = async (req: Request, res: Response) => {
     try {
-        const restaurant=await Restaurant.find({user:req.userId});
-        if(!restaurant){
+        const restaurant = await Restaurant.find({user:req.userId});
+        if(!restaurant || restaurant.length === 0){
             res.status(404).json({message:"Restaurant not found"});
             return;
         }
-        res.status(200).json({message:"Restaurants fetched successfully",restaurant});
+        res.status(200).json({message:"Restaurants fetched successfully", restaurant});
     } catch (error) {
         console.log(error);
         res.status(500).json({message:"Internal server error"});
@@ -47,35 +47,58 @@ export const getRestaurant = async (req: Request, res: Response) => {
 }
 export const updateRestaurant = async (req: Request, res: Response) => {
     try {
-        const { restaurantName, city,country,deliveryTime,cuisine,imageUrl} = req.body;
-        const file=req.file;
-        const restaurant=await Restaurant.findOne({user:req.userId});
+        const { restaurantName, city, country, deliveryTime, cuisine } = req.body;
+        const file = req.file;
+        const restaurant = await Restaurant.findOne({ user: req.userId });
       
-        if(!restaurant){
-            res.status(404).json({message:"Restaurant not found"});
+        if (!restaurant) {
+            res.status(404).json({ message: "Restaurant not found" });
             return;
         }
-        restaurant.restaurantName=restaurantName;
-        restaurant.city=city;
-        restaurant.country=country;
-        restaurant.deliveryTime=deliveryTime;
-        restaurant.cuisines=JSON.parse(cuisine);
-        if(file){
-            const image=await uploadImageOnCloudinary(file as Express.Multer.File);
-            restaurant.imageUrl=image;
+
+        // Update basic fields
+        if (restaurantName) restaurant.restaurantName = restaurantName;
+        if (city) restaurant.city = city;
+        if (country) restaurant.country = country;
+        if (deliveryTime) restaurant.deliveryTime = deliveryTime;
+        
+        // Handle cuisine update
+        if (cuisine) {
+            try {
+                const cuisineData = typeof cuisine === 'string' ? JSON.parse(cuisine) : cuisine;
+                restaurant.cuisines = cuisineData;
+            } catch (error) {
+                console.error("Error parsing cuisine data:", error);
+                res.status(400).json({ message: "Invalid cuisine data format" });
+                return;
+            }
         }
+
+        // Handle image update
+        if (file) {
+            try {
+                const image = await uploadImageOnCloudinary(file as Express.Multer.File);
+                restaurant.imageUrl = image;
+            } catch (error) {
+                console.error("Error uploading image:", error);
+                res.status(500).json({ message: "Failed to upload image" });
+                return;
+            }
+        }
+
         await restaurant.save();
-        res.status(200).json({message:"Restaurant updated successfully",restaurant});
+        res.status(200).json({ message: "Restaurant updated successfully", restaurant });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({message:"Internal server error"});
+        console.error("Error updating restaurant:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 export const getRestaurantOrMenu = async (req: Request, res: Response) => {
     try {
-        const restaurant=await Restaurant.findOne({user:req.userId});
+        const restaurant=await Restaurant.findOne({user:req.userId}).populate("menus");
         if(!restaurant){
             res.status(404).json({message:"Restaurant not found"});
+            
             return;
         }
         const orders=await Order.find({restaurant:restaurant._id}).populate("restaurant").populate("user");
@@ -150,6 +173,8 @@ export const getSingleRestaurant = async (req: Request, res: Response) => {
         res.status(500).json({message:"Internal server error"});
     }
 }
+
+
     
     
 

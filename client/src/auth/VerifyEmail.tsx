@@ -3,12 +3,14 @@ import { Input } from "@/components/ui/input"
 import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Loader2 } from "lucide-react"
+import { useUserStore } from "@/store/useUseStore"
+import { toast } from "sonner"
 
 const VerifyEmail = () => {
     const [otp,setOtp]=useState<string[]>(["","","","","",""])
     const inputRef=useRef<any>([]);
+    const navigate=useNavigate();
     
-    const loading:boolean=false;
     const handleOtpChange=(index:number,value:string)=>{
         if(/^[a-zA-Z0-9]$/.test(value)||value===""){
             const newOtp=[...otp];
@@ -25,6 +27,17 @@ const VerifyEmail = () => {
             inputRef.current[index-1].focus();
         }
     }
+    const {verfyEmail,loading}=useUserStore();
+    const submitHandler=async(e:React.FormEvent<HTMLFormElement>)=>{
+        e.preventDefault();
+        const verificationCode=otp.join("");
+        try{
+            await verfyEmail(verificationCode);
+            navigate("/");
+        }catch(error:any){
+            toast.error(error.response?.data?.message || 'Verification failed');
+        }
+    }
 
   return (
     <div className="flex items-center justify-center w-full min-h-screen">
@@ -33,7 +46,7 @@ const VerifyEmail = () => {
                 <h1 className="font-extrabold text-2xl mb-2">Verify Email</h1>
                 <p className="text-sm text-gray-600">Enter the code sent to your email</p>
             </div>
-            <form action="">
+            <form onSubmit={submitHandler}>
                 <div className="flex justify-between">
                     
                     {

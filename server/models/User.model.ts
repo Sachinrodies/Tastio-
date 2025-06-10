@@ -66,7 +66,7 @@ const userSchema=new mongoose.Schema<IUserModel>({
    },
    isVerified:{
     type:Boolean,
-    default:false,
+    default:true,
    },
    resetPasswordToken:{
     type:String,

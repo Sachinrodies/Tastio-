@@ -3,12 +3,18 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { EditIcon, Loader2, PlusIcon } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import MenuImage from "@/assets/menu2.jpg"
 import EditMenu from './EditMenu'
 import type { MenuSchemaType } from '@/schema/MenuSchema'
 import { MenuSchema } from '@/schema/MenuSchema'
 import { ZodError } from 'zod'
+import { userMenuStore } from '@/store/useMenuStore'
+import { toast } from 'sonner'
+import { useRestaurantStore } from '@/store/useRestaurantStore'
+
+type MenuWithId = MenuSchemaType & { _id: string };
+
 const MenuData = [
     {
         id: 1,
@@ -38,13 +44,35 @@ const AddMenu = () => {
         name: "",
         description: "",
         price: 0,
-        image: null as unknown as File  // Initialize as null but type as File
+        image: null as unknown as File
     })
     const [error, setError] = useState<ZodError | null>(null);
     const [open, setOpen] = useState<boolean>(false)
     const [editMenu, setEditMenu] = useState<boolean>(false)
-    const [selectedMenu, setSelectedMenu] = useState<MenuSchemaType | null>(null)
-    const loading = false;
+    const [selectedMenu, setSelectedMenu] = useState<MenuWithId | null>(null)
+    const {loading, createMenu} = userMenuStore();
+    const {restaurant} = useRestaurantStore();
+
+    // Reset form and loading state when dialog opens/closes
+    useEffect(() => {
+        if (!open) {
+            setInput({
+                name: "",
+                description: "",
+                price: 0,
+                image: null as unknown as File
+            });
+            setError(null);
+        }
+    }, [open]);
+
+    // Reset loading state when dialog opens
+    useEffect(() => {
+        if (open) {
+            userMenuStore.setState({ loading: false });
+        }
+    }, [open]);
+
     const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         if (name === "price") {
@@ -53,15 +81,29 @@ const AddMenu = () => {
             setInput({ ...input, [name]: value });
         }
     };
-    const  submitHandler = (e:React.FormEvent<HTMLFormElement>)=>{
+
+    const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const result = MenuSchema.safeParse(input);
-        if(!result.success){
+        if (!result.success) {
             setError(result.error);
-        }else{
-            console.log(result.data);
+        } else {
+            try {
+                const formData = new FormData();
+                formData.append('name', result.data.name);
+                formData.append('description', result.data.description);
+                formData.append('price', result.data.price.toString());
+                if (result.data.image) {
+                    formData.append('image', result.data.image);
+                }
+                await createMenu(formData);
+                setOpen(false);
+            } catch (error: any) {
+                toast.error(error.response?.data?.message || 'Menu creation failed');
+            }
         }
     }
+
     return (
         <div className="max-w-6xl mx-auto my-10">
             <div className="flex justify-between">
@@ -69,7 +111,7 @@ const AddMenu = () => {
                     Available Menu
                 </h1>
                 <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogTrigger>
+                    <DialogTrigger asChild>
                         <Button className="bg-[#D19254] text-white hover:bg-[#D19254]/80">
                             <PlusIcon className="mr-1" />
                             Add Menu
@@ -112,25 +154,18 @@ const AddMenu = () => {
                             </div>
                             <div className="mb-4">
                                 <Label className="mb-2 block">Upload Menu Image</Label>
-                                <Input 
-                                    type="file" 
+                                <Input
+                                    type="file"
                                     onChange={(e) => {
                                         const file = e.target.files?.[0];
                                         if (file) {
-                                            setInput({...input, image: file});
-                                            setError(null); // Clear any previous image errors
-                                        } else {
-                                            const error = new ZodError([{
-                                                code: "custom",
-                                                path: ["image"],
-                                                message: "Image is required"
-                                            }]);
-                                            setError(error);
+                                            setInput({ ...input, image: file });
+                                            setError(null);
                                         }
-                                    }} 
-                                    name="image" 
+                                    }}
+                                    name="image"
                                     accept="image/*"
-                                    placeholder="Enter Menu Image" 
+                                    placeholder="Enter Menu Image"
                                 />
                                 {error?.formErrors.fieldErrors.image && (
                                     <span className="text-red-500">
@@ -139,29 +174,34 @@ const AddMenu = () => {
                                 )}
                             </div>
                             <DialogFooter className="mt-5">
-                                {
-                                    loading ? (
-                                        <Button disabled className="bg-[#D19254] text-white hover:bg-[#D19254]/80" type="submit">
-                                            <Loader2 className="mr-2 animate-spin" />
+                                <Button 
+                                    className="bg-[#D19254] text-white hover:bg-[#D19254]/80" 
+                                    type="submit"
+                                    disabled={loading}
+                                >
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                             Adding...
-                                        </Button>
+                                        </>
                                     ) : (
-                                        <Button className="bg-[#D19254] text-white hover:bg-[#D19254]/80" type="submit">Add Menu</Button>
-                                    )
-                                }
+                                        'Add Menu'
+                                    )}
+                                </Button>
                             </DialogFooter>
-
                         </form>
                     </DialogContent>
                 </Dialog>
             </div>
             {
-                MenuData.map((item: any, idx: number) => (
-                    <div className="mt-6 space-y-4" key={item.id}>
+                restaurant.menus
+                  .filter((item: any) => item && item._id && item.name && item.price && item.imageUrl)
+                  .map((item: any, idx: number) => (
+                    <div className="mt-6 space-y-4" key={item._id}>
                         <div className="flex flex-col md:flex-row md:items-center md:space-x-4 md:p-4 p-2 shadow-md rounded-lg border">
                             <div className="w-full md:w-64 flex-shrink-0">
                                 <img
-                                    src={item.image}
+                                    src={item.imageUrl}
                                     alt="Menu"
                                     className="w-full h-[200px] md:h-[250px] object-cover rounded-lg"
                                 />
@@ -174,8 +214,15 @@ const AddMenu = () => {
                                 </h2>
                                 <div className="mt-4 flex justify-center">
                                     <Button
-                                        onClick={() => {setSelectedMenu(item);
-                                            setEditMenu(true)
+                                        onClick={() => {
+                                            setSelectedMenu({
+                                                _id: item._id,
+                                                name: item.name,
+                                                description: item.description,
+                                                price: item.price,
+                                                image: item.imageUrl
+                                            });
+                                            setEditMenu(true);
                                         }}
                                         className="bg-[#D19254] text-white hover:bg-[#D19254]/80 px-6 py-2 w-full max-w-xs rounded-md text-sm flex items-center justify-center"
                                     >

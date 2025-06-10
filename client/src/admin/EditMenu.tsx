@@ -6,37 +6,63 @@ import { Loader2 } from 'lucide-react';
 import React, { useState, useEffect } from 'react'
 import type { MenuSchemaType } from '@/schema/MenuSchema';
 import { MenuSchema } from '@/schema/MenuSchema';
+import { userMenuStore } from '@/store/useMenuStore';
+import { toast } from 'sonner';
 
 type EditMenuProps = {
-  selectedMenu: MenuSchemaType | null;
-  setSelectedMenu: React.Dispatch<React.SetStateAction<MenuSchemaType | null>>;
+  selectedMenu: MenuSchemaType & { _id: string } | null;
+  setSelectedMenu: React.Dispatch<React.SetStateAction<MenuSchemaType & { _id: string } | null>>;
   editMenu: boolean;
   setEditMenu: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const EditMenu = ({ selectedMenu, setSelectedMenu, editMenu, setEditMenu }: EditMenuProps) => {
   const [error, setError] = useState<Partial<MenuSchemaType> | null>(null);
+  const { loading, editMenu: editMenuStore } = userMenuStore();
 
   const [input, setInput] = useState<MenuSchemaType>({
     name: "",
     description: "",
     price: 0,
-      image: new File([], "default.jpg")
-})
+    image: ""
+  });
+
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setInput({ ...input, [name]: name === "number" ? Number(value) : value })
+    if (name === "price") {
+      setInput({ ...input, [name]: Number(value) || 0 });
+    } else {
+      setInput({ ...input, [name]: value });
+    }
   };
-    const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-   const result = MenuSchema.safeParse(input);
-   if(!result.success){
-   const fieldErrors = result.error.formErrors.fieldErrors;
-   setError(fieldErrors as Partial<MenuSchemaType>);
-   }else{
-    console.log(result.data);
-   }
-  }
+    const result = MenuSchema.safeParse(input);
+    if (!result.success) {
+      const fieldErrors = result.error.formErrors.fieldErrors;
+      setError(fieldErrors as Partial<MenuSchemaType>);
+    } else {
+      try {
+        const formData = new FormData();
+        formData.append('name', result.data.name);
+        formData.append('description', result.data.description);
+        formData.append('price', result.data.price.toString());
+        if (result.data.image instanceof File) {
+          formData.append('image', result.data.image);
+        }
+        if (selectedMenu?._id) {
+          await editMenuStore(selectedMenu._id, formData);
+          setEditMenu(false);
+          setSelectedMenu(null);
+        }
+      } catch (error: any) {
+        console.error('Menu update error:', error);
+        toast.error(error.response?.data?.message || 'Menu update failed');
+      }
+    }
+  };
+
   useEffect(() => {
     if (selectedMenu) {
       setInput({
@@ -44,10 +70,9 @@ const EditMenu = ({ selectedMenu, setSelectedMenu, editMenu, setEditMenu }: Edit
         description: selectedMenu.description,
         price: selectedMenu.price,
         image: selectedMenu.image
-      })
+      });
     }
-  }, [selectedMenu])
-  const loading = false;
+  }, [selectedMenu]);
 
   return (
     <Dialog open={editMenu} onOpenChange={setEditMenu}>
@@ -71,7 +96,7 @@ const EditMenu = ({ selectedMenu, setSelectedMenu, editMenu, setEditMenu }: Edit
           </div>
           <div className="mb-4">
             <Label className="mb-2 block">Price in (₹)</Label>
-            <Input type="text" value={input.price} onChange={changeEventHandler} name="price" placeholder="Enter Menu Price" />
+            <Input type="number" value={input.price} onChange={changeEventHandler} name="price" placeholder="Enter Menu Price" />
             {error?.price && <span className="text-red-500">{error.price}</span>}
           </div>
           <div className="mb-4">
@@ -82,31 +107,29 @@ const EditMenu = ({ selectedMenu, setSelectedMenu, editMenu, setEditMenu }: Edit
                 const file = e.target.files?.[0];
                 if (file) {
                   setInput({ ...input, image: file });
-                  console.log('File selected:', file);
+                  setError(null);
                 }
               }}
               name="image"
+              accept="image/*"
               placeholder="Enter Menu Image"
             />
             {error?.image && <span className="text-red-500">{error.image?.name || "Image is required"}</span>}
-              </div>
+          </div>
           <DialogFooter className="mt-5">
-            {
-              loading ? (
-                <Button disabled className="bg-[#D19254] text-white hover:bg-[#D19254]/80" type="submit">
-                  <Loader2 className="mr-2 animate-spin" />
-                  Adding...
-                </Button>
-              ) : (
-                <Button className="bg-[#D19254] text-white hover:bg-[#D19254]/80" type="submit">Update Menu</Button>
-              )
-            }
+            {loading ? (
+              <Button disabled className="bg-[#D19254] text-white hover:bg-[#D19254]/80" type="submit">
+                <Loader2 className="mr-2 animate-spin" />
+                Updating...
+              </Button>
+            ) : (
+              <Button className="bg-[#D19254] text-white hover:bg-[#D19254]/80" type="submit">Update Menu</Button>
+            )}
           </DialogFooter>
-
         </form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default EditMenu
+export default EditMenu;

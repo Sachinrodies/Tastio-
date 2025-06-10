@@ -9,16 +9,20 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { Label } from "./label"
 import { Input } from "./input"
+import { useCartStore } from "../../store/useCartStore";
+import { useUserStore } from "../../store/useUseStore";
 import { Separator } from "./separator"
 
 const Navbar = () => {
+  const { logout, loading, user } = useUserStore();
   const admin = true;
-  const loading = false;
+
+
 
   return (
     <div>
       <div className="flex items-center justify-between h-16">
-        <Link to="/navbar">
+        <Link to="/">
           <h1 className="md:font-extrabold text-2xl font-bold">Tastio</h1>
         </Link>
         <div className="hidden md:flex items-center gap-10">
@@ -29,7 +33,7 @@ const Navbar = () => {
 
 
             {
-              admin && (
+              user?.admin && (
                 <Menubar>
                   <MenubarMenu>
                     <MenubarTrigger>
@@ -100,7 +104,7 @@ const Navbar = () => {
                 loading ? <Button disabled={true} className="bg-[#D19254] hover:bg-[#d18c47]">
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Please wait
-                </Button> : <Button className="bg-[#D19254] hover:bg-[#d18c47]">
+                </Button> : <Button onClick={() => logout()} className="bg-[#D19254] hover:bg-[#d18c47]">
                   Logout
                 </Button>
               }
@@ -123,7 +127,8 @@ const Navbar = () => {
 
 export default Navbar
 const MobileNavbar = () => {
-  const user = true;
+  const { logout, loading, user } = useUserStore();
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -171,49 +176,65 @@ const MobileNavbar = () => {
             <span>Cart(1)</span>
 
           </Link>
-          <Link to="/admin/add-menu" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
-            <SquareMenu/>
-            <span>Menu</span>
+          {
+            user?.admin && (
+              <>
+                <Link to="/admin/add-menu" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
+                  <SquareMenu />
+                  <span>Menu</span>
 
-          </Link>
-          <Link to="/admin/restaurants" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
-            <UtensilsCrossed />
-            <span>Restaurant</span>
+                </Link>
+                <Link to="/admin/restaurants" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
+                  <UtensilsCrossed />
+                  <span>Restaurant</span>
 
-          </Link>
-          <Link to="/admin/orders" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
-            <PackageCheck/>
-            <span>Restaurant Orders</span>
+                </Link>
+                <Link to="/admin/orders" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
+                  <PackageCheck />
+                  <span>Restaurant Orders</span>
 
-          </Link>
-         
+                </Link>
+              </>
+            )
+
+          }
+
+
+
+
+
 
         </SheetDescription>
 
 
         <SheetFooter className="flex flex-col gap-4">
-          
-            
-              <>
-              <div className="flex items-center gap-2">
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <h1 className="font-bold ">Tastio</h1>
-               
-              </div>
-              </>
-           
-            <>
-            <Button type="submit" className="bg-[#D19254] hover:bg-[#d18c47]">Login</Button>
+
+
+          <>
+            <div className="flex items-center gap-2">
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <h1 className="font-bold ">Tastio</h1>
+
+            </div>
+          </>
+
+          <>
+            {
+              loading ? <Button disabled={true} className="bg-[#D19254] hover:bg-[#d18c47]">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </Button> : <Button type="submit" className="bg-[#D19254] hover:bg-[#d18c47]" onClick={() => logout()}>Logout</Button>
+            }
             <SheetClose asChild>
               <Button variant="outline">Close</Button>
             </SheetClose>
-            </>
-          
+          </>
 
-        
+
+
         </SheetFooter>
       </SheetContent>
     </Sheet>

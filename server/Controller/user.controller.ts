@@ -25,11 +25,17 @@ export const signup = async (req: Request, res: Response) => {
             contact: Number(contact),
             verificationToken: verificationToken,
             verificationTokenExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+            isVerified: true // Set to true by default for now
         });
         generateToken(res, user);
-        await sendVerificationEmail(user.email, verificationToken);
+        try {
+            await sendVerificationEmail(user.email, verificationToken);
+        } catch (emailError) {
+            console.log("Failed to send verification email:", emailError);
+            // Continue with signup even if email fails
+        }
         const userWithoutPassword = await User.findOne({ email }).select("-password");
-        res.status(201).json({ message: "User created successfully", userWithoutPassword });
+        res.status(201).json({ message: "User created successfully", user: userWithoutPassword });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Internal server error" });
@@ -48,11 +54,18 @@ export const login = async (req: Request, res: Response) => {
             res.status(400).json({ message: "Invalid password" });
             return;
         }
+        if (!user.isVerified) {
+            res.status(400).json({ message: "Please verify your email before logging in" });
+            return;
+        }
         generateToken(res, user);
         user.lastlogin = new Date();
         await user.save();
         const userWithoutPassword = await User.findOne({ email }).select("-password");
-        res.status(200).json({ message: `Welcome back ${user.fullname}`, userWithoutPassword });
+        res.status(200).json({ 
+            message: `Welcome back ${user.fullname}`, 
+            user: userWithoutPassword 
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Internal server error" });
@@ -61,6 +74,7 @@ export const login = async (req: Request, res: Response) => {
 export const verifyEmail = async (req: Request, res: Response) => {
     try {
         const { verificationCode } = req.body;
+        
         const user = await User.findOne({ verificationToken: verificationCode, verificationTokenExpires: { $gt: Date.now() } }).select("-password");
         if (!user) {
             res.status(400).json({ message: "Invalid or expired verification code" });
@@ -140,7 +154,7 @@ export const checkAuth = async (req: Request, res: Response) => {
         }
         res.status(200).json({
             success: true,
-            user
+            user: user
         });
     }
     catch(error) {
