@@ -6,6 +6,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { generateVerificationCode } from "../Utils/generateVerification";
 import { generateToken } from "../Utils/generateToken";
 import { resetPasswordSuccessEmail, sendResetPasswordEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email";
+import uploadImageOnCloudinary from "../Utils/imageUpload";
 
 
 export const signup = async (req: Request, res: Response) => {
@@ -31,13 +32,11 @@ export const signup = async (req: Request, res: Response) => {
         try {
             await sendVerificationEmail(user.email, verificationToken);
         } catch (emailError) {
-            console.log("Failed to send verification email:", emailError);
             // Continue with signup even if email fails
         }
         const userWithoutPassword = await User.findOne({ email }).select("-password");
         res.status(201).json({ message: "User created successfully", user: userWithoutPassword });
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -67,7 +66,6 @@ export const login = async (req: Request, res: Response) => {
             user: userWithoutPassword 
         });
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -87,7 +85,6 @@ export const verifyEmail = async (req: Request, res: Response) => {
         await sendWelcomeEmail(user.email, user.fullname);
         res.status(200).json({ message: "Email verified successfully", user });
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -99,7 +96,6 @@ export const logout = async (req: Request, res: Response) => {
         });
         res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -118,7 +114,6 @@ export const forgotPassword = async (req: Request, res: Response) => {
         await sendResetPasswordEmail(user.email, resetToken);
         res.status(200).json({ message: "Reset password link sent to your email" });
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -137,7 +132,6 @@ export const resetPassword = async (req: Request, res: Response) => {
         await user.save();
         res.status(200).json({ message: "Password reset successfully" });
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -158,7 +152,6 @@ export const checkAuth = async (req: Request, res: Response) => {
         });
     }
     catch(error) {
-        console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -172,23 +165,34 @@ export const getUserProfile=async(req:Request,res:Response)=>{
         return res.status(200).json({message:"User profile",user})
     }
     catch(error){
-        console.log(error);
         return res.status(500).json({message:"Internal server error"})
     }
 };
 export const updateUserProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = req.userId;
-        const { fullname, email, address, city, country, profilePicture } = req.body;
-        let cloudResponse: any;
-        cloudResponse = await cloudinary.uploader.upload(profilePicture);
-        const updatedData = {
+        const { fullname, email, address, city, country } = req.body;
+        const file = req.file;
+
+        const updatedData: any = {
             fullname,
             email,
             address,
             city,
             country,
         };
+
+        // Handle profile picture upload if file exists
+        if (file) {
+            try {
+                const imageUrl = await uploadImageOnCloudinary(file as Express.Multer.File);
+                updatedData.profilePicture = imageUrl;
+            } catch (error) {
+                res.status(500).json({ message: "Failed to upload image" });
+                return;
+            }
+        }
+
         const user = await User.findByIdAndUpdate(userId, updatedData, { new: true }).select("-password");
         if (!user) {
             res.status(400).json({ message: "User not found" });
@@ -196,7 +200,6 @@ export const updateUserProfile = async (req: Request, res: Response, next: NextF
         }
         res.status(200).json({ message: "User profile updated", user });
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: "Internal server error" });
     }
 };

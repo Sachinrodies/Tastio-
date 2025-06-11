@@ -57,7 +57,7 @@ const EditMenu = ({ selectedMenu, setSelectedMenu, editMenu, setEditMenu }: Edit
           setSelectedMenu(null);
         }
       } catch (error: any) {
-        console.error('Menu update error:', error);
+        
         toast.error(error.response?.data?.message || 'Menu update failed');
       }
     }
@@ -114,7 +114,7 @@ const EditMenu = ({ selectedMenu, setSelectedMenu, editMenu, setEditMenu }: Edit
               accept="image/*"
               placeholder="Enter Menu Image"
             />
-            {error?.image && <span className="text-red-500">{error.image?.name || "Image is required"}</span>}
+            {error?.image && <span className="text-red-500">{typeof error.image === 'object' ? error.image.name : "Image is required"}</span>}
           </div>
           <DialogFooter className="mt-5">
             {loading ? (

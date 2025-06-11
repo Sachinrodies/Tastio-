@@ -8,10 +8,11 @@ import cookieParser from "cookie-parser";
 import menuRoutes from "./routes/menu.route";
 import orderRoutes from "./routes/order.route";
 import cors from "cors";
+import path from "path";
 dotenv.config();
 const app = express();
 
-
+const __dirname = path.resolve();
 const PORT = process.env.PORT || 8001
 
 //default middleware for  every mern stack
@@ -31,6 +32,10 @@ app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/restaurant", restaurantRoutes);
 app.use("/api/v1/menu", menuRoutes);
 app.use("/api/v1/order", orderRoutes);
+app.use(express.static(path.join(__dirname, "client/dist")));
+app.use("*",(req,res)=>{
+    res.sendFile(path.join(__dirname, "client/dist", "index.html"));
+})
 
 
 
@@ -39,7 +44,4 @@ app.use("/api/v1/order", orderRoutes);
 
 app.listen(PORT, () => {
     connectDB();
-    console.log(`Server listening at http://localhost:${PORT}`);
-}).on('error', (err) => {
-    console.error('Error starting server:', err);
 });

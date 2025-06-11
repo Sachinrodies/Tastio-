@@ -12,12 +12,12 @@ import { Input } from "./input"
 import { useCartStore } from "../../store/useCartStore";
 import { useUserStore } from "../../store/useUseStore";
 import { Separator } from "./separator"
+import { useThemeStore } from "@/store/UseThemeStore";
 
 const Navbar = () => {
   const { logout, loading, user } = useUserStore();
-  const admin = true;
-
-
+  const {cartItems}=useCartStore()
+  const {setTheme}=useThemeStore()
 
   return (
     <div>
@@ -76,10 +76,10 @@ const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={()=>setTheme("light")}>
                     Light
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={()=>setTheme("dark")}>
                     Dark
                   </DropdownMenuItem>
 
@@ -89,13 +89,17 @@ const Navbar = () => {
             </div>
             <Link to="/cart" className="relative cursor-pointer">
               <ShoppingCart />
-              <Button size="icon" className="absolute -inset-y-3 left-2 text-xs rounded-full h-4 w-4 bg-red-500 hover:bg-red-600 text-white">1</Button>
+              {
+                cartItems.length>0 && (
+                  <Button size="icon" className="absolute -inset-y-3 left-2 text-xs rounded-full h-4 w-4 bg-red-500 hover:bg-red-600 text-white">{cartItems.length}</Button>
+                )
+              }
 
             </Link>
             <div>
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage src={user?.profilePicture} />
+                <AvatarFallback>{user?.fullname?.charAt(0) || 'U'}</AvatarFallback>
               </Avatar>
 
             </div>
@@ -128,6 +132,7 @@ const Navbar = () => {
 export default Navbar
 const MobileNavbar = () => {
   const { logout, loading, user } = useUserStore();
+  const {setTheme}=useThemeStore()
 
   return (
     <Sheet>
@@ -148,10 +153,10 @@ const MobileNavbar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=>setTheme("light")}>
                 Light
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=>setTheme("dark")}>
                 Dark
               </DropdownMenuItem>
 
@@ -213,8 +218,8 @@ const MobileNavbar = () => {
           <>
             <div className="flex items-center gap-2">
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage src={user?.profilePicture} />
+                <AvatarFallback>{user?.fullname?.charAt(0) || 'U'}</AvatarFallback>
               </Avatar>
               <h1 className="font-bold ">Tastio</h1>
 

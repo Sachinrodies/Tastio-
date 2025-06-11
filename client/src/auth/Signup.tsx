@@ -35,13 +35,13 @@ const Signup = () => {
             await signup(input);
             navigate("/verify-email");
         }catch(error){
-            console.log(error);
+            // Remove all console.log statements
         }
 
     }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen bg-background">
         <form onSubmit={loginSubmitHandler} className="md:p-8 p-4 w-full max-w-md rounded-lg bg-white shadow-lg mx-4">
             <div className="mb-6 text-center">
                 <h1 className="font-bold text-3xl text-[#D19254]">Tastio</h1>

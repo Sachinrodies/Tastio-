@@ -193,46 +193,46 @@ const AddMenu = () => {
                     </DialogContent>
                 </Dialog>
             </div>
-            {
-                restaurant.menus
-                  .filter((item: any) => item && item._id && item.name && item.price && item.imageUrl)
-                  .map((item: any, idx: number) => (
-                    <div className="mt-6 space-y-4" key={item._id}>
-                        <div className="flex flex-col md:flex-row md:items-center md:space-x-4 md:p-4 p-2 shadow-md rounded-lg border">
-                            <div className="w-full md:w-64 flex-shrink-0">
-                                <img
-                                    src={item.imageUrl}
-                                    alt="Menu"
-                                    className="w-full h-[200px] md:h-[250px] object-cover rounded-lg"
-                                />
-                            </div>
-                            <div className="flex-1 flex flex-col mt-4 md:mt-0">
-                                <h1 className="text-lg font-semibold text-gray-800 ">{item.name}</h1>
-                                <p>{item.description}</p>
-                                <h2 className="text-md font-semibold mt-2">
-                                    Price:<span className="text-[#D19254]">₹{item.price}</span>
-                                </h2>
-                                <div className="mt-4 flex justify-center">
-                                    <Button
-                                        onClick={() => {
-                                            setSelectedMenu({
-                                                _id: item._id,
-                                                name: item.name,
-                                                description: item.description,
-                                                price: item.price,
-                                                image: item.imageUrl
-                                            });
-                                            setEditMenu(true);
-                                        }}
-                                        className="bg-[#D19254] text-white hover:bg-[#D19254]/80 px-6 py-2 w-full max-w-xs rounded-md text-sm flex items-center justify-center"
-                                    >
-                                        <EditIcon className="mr-2 h-4 w-4" />
-                                        Edit
-                                    </Button>
-                                </div>
-                            </div>
+            {restaurant && restaurant.menus &&
+              restaurant.menus
+                .filter((item: any) => item && item._id && item.name && item.price && item.imageUrl)
+                .map((item: any, idx: number) => (
+                  <div className="mt-6 space-y-4" key={item._id}>
+                    <div className="flex flex-col md:flex-row md:items-center md:space-x-4 md:p-4 p-2 shadow-md rounded-lg border">
+                      <div className="w-full md:w-64 flex-shrink-0">
+                        <img
+                          src={item.imageUrl}
+                          alt="Menu"
+                          className="w-full h-[200px] md:h-[250px] object-cover rounded-lg"
+                        />
+                      </div>
+                      <div className="flex-1 flex flex-col mt-4 md:mt-0">
+                        <h1 className="text-lg font-semibold text-gray-800 ">{item.name}</h1>
+                        <p>{item.description}</p>
+                        <h2 className="text-md font-semibold mt-2">
+                          Price:<span className="text-[#D19254]">₹{item.price}</span>
+                        </h2>
+                        <div className="mt-4 flex justify-center">
+                          <Button
+                            onClick={() => {
+                              setSelectedMenu({
+                                _id: item._id,
+                                name: item.name,
+                                description: item.description,
+                                price: item.price,
+                                image: item.imageUrl
+                              });
+                              setEditMenu(true);
+                            }}
+                            className="bg-[#D19254] text-white hover:bg-[#D19254]/80 px-6 py-2 w-full max-w-xs rounded-md text-sm flex items-center justify-center"
+                          >
+                            <EditIcon className="mr-2 h-4 w-4" />
+                            Edit
+                          </Button>
                         </div>
+                      </div>
                     </div>
+                  </div>
                 ))
             }
 

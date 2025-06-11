@@ -4,10 +4,20 @@ import { Search } from 'lucide-react'
 import { Button } from './button'
 import HeroImage from '@/assets/hero_pizza.png'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 const HeroSection = () => {
     const [search, setSearch] = useState<string>("");
     const navigate = useNavigate();
+
+    const handleSearch = () => {
+        if (!search.trim()) {
+            toast.error('Please enter a search term');
+            return;
+        }
+        navigate(`/search/${search.trim()}`);
+    };
+
     return (
         <div className=" flex  flex-col md:flex-row  max-w-7xl mx-auto md:p-10 rounded-lg items-center justify-center m-4 gap-20">
             <div className="flex flex-col gap-10 md:w[40%]">
@@ -18,10 +28,20 @@ const HeroSection = () => {
                 </div>
                 <div className="relative flex items-center gap-2 ">
 
-                    <Input type="text" value={search} placeholder="search restaurant by name,city & country" onChange={(e) => setSearch(e.target.value)} className="pl-10  shadow-lg" />
+                    <Input 
+                        type="text" 
+                        value={search} 
+                        placeholder="search restaurant by name,city & country" 
+                        onChange={(e) => setSearch(e.target.value)} 
+                        className="pl-10 shadow-lg"
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSearch();
+                            }
+                        }}
+                    />
                     <Search className="absolute inset-y-2 left-2 md:left-4 text-gray-600 pointer-events-none" />
-                    <Button  onClick={()=>navigate(`/search/${search}`)} className="bg-[#D19254] hover:bg-[#d18c47] ">Search</Button>
-
+                    <Button onClick={handleSearch} className="bg-[#D19254] hover:bg-[#d18c47]">Search</Button>
 
                 </div>
 

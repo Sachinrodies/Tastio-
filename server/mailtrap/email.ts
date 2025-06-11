@@ -16,7 +16,6 @@ export const sendVerificationEmail=async(email:string,verificationCode:string)=>
             })
         }
        catch(error){
-        console.log(error);
         throw new Error("Failed to send verification email");
        }
     }
@@ -35,7 +34,6 @@ export const sendVerificationEmail=async(email:string,verificationCode:string)=>
             })
         }
         catch(error){
-            console.log(error);
             throw new Error("Failed to send welcome email");
         }
     }
@@ -54,7 +52,6 @@ export const sendVerificationEmail=async(email:string,verificationCode:string)=>
             })
         }
         catch(error){
-            console.log(error);
             throw new Error("Failed to send reset password email");
         }
     }
@@ -73,7 +70,6 @@ export const sendVerificationEmail=async(email:string,verificationCode:string)=>
             })
         }
         catch(error){
-            console.log(error);
             throw new Error("Failed to send reset password success email");
         }
     }

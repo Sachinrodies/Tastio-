@@ -15,16 +15,19 @@ interface UserStore {
 const API_URL="http://localhost:8001/api/v1/user";
 axios.defaults.withCredentials=true;
 type User={
-    fullname:string;
-    email:string;
-   contact:string;
-   address:string;
-   city:string;
- 
-   country:string;
-   profileImage:string;
-   admin:boolean;
-   isVerified:boolean;
+    _id: string;
+    fullname: string;
+    email: string;
+    contact: string;
+    address: string;
+    city: string;
+    country: string;
+    profilePicture: string;
+    admin: boolean;
+    isVerified: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+    lastlogin?: string;
 }
 type UserState={
     user:null | User;
@@ -42,7 +45,7 @@ type UserState={
 
 }
 
-export const useUserStore = create<any>()(persist((set) => ({
+export const useUserStore = create<any>()(persist((set, get) => ({
   user:null,
   isAuthenticated:false,
   isCheckingAuth:true,
@@ -57,7 +60,6 @@ export const useUserStore = create<any>()(persist((set) => ({
             }
         });
         if(response.status===201){
-            console.log(response.data);
             toast.success(response.data.message);
             set({user:response.data.user,isAuthenticated:true,isCheckingAuth:false,loading:false});
         }
@@ -85,7 +87,6 @@ export const useUserStore = create<any>()(persist((set) => ({
             }
         });
             if(response.status===200){
-            console.log(response.data);
             toast.success(response.data.message);
             set({user:response.data.user,isAuthenticated:true,isCheckingAuth:false,loading:false});
         }
@@ -179,18 +180,76 @@ export const useUserStore = create<any>()(persist((set) => ({
   updateUserProfile:async(input:any)=>{
     try{
         set({loading:true});
-        const response=await axios.put(`${API_URL}/profile/update`,input,{
-            headers:{
-                "Content-Type":"application/json"
+        
+        // Create FormData for the request
+        const formData = new FormData();
+        
+        // Add all text fields
+        formData.append('fullname', input.fullname);
+        formData.append('email', input.email);
+        formData.append('contact', input.contact);
+        formData.append('address', input.address);
+        formData.append('city', input.city);
+        formData.append('country', input.country);
+
+        // Get current user state
+        const currentUser = get().user;
+
+        // Handle profile picture if it exists and is different from current
+        if (input.profilePicture && 
+            input.profilePicture.startsWith('data:image') && 
+            input.profilePicture !== currentUser?.profilePicture) {
+            // Convert base64 to blob
+            const base64Data = input.profilePicture.split(',')[1];
+            const byteCharacters = atob(base64Data);
+            const byteArrays = [];
+            for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+                const slice = byteCharacters.slice(offset, offset + 512);
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            const blob = new Blob(byteArrays, { type: 'image/jpeg' });
+            formData.append('profilePicture', blob, 'profile.jpg');
+        }
+
+        console.log('Sending profile update request with FormData');
+        
+        const response = await axios.put(`${API_URL}/profile/update`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
             }
         });
+        
         if(response.status===200){
             toast.success(response.data.message);
-            set({loading:false,user:response.data.user,isAuthenticated:true,isCheckingAuth:false});
+            
+            // Update the user state with the new data
+            set((state: UserState) => {
+                const updatedUser = {
+                    ...state.user,
+                    ...response.data.user,
+                    profilePicture: response.data.user.profilePicture
+                };
+                return {
+                    ...state,
+                    loading: false,
+                    user: updatedUser,
+                    isAuthenticated: true,
+                    isCheckingAuth: false
+                };
+            });
         }
     } catch (error: any) {
+        if (error.response) {
+            toast.error(error.response.data.message || 'Profile update failed');
+        } else {
+            toast.error('Profile update failed');
+        }
         set({loading:false});
-        toast.error(error.response?.data?.message || 'Profile update failed');
     }
   },
 

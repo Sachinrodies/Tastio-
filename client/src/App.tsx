@@ -19,6 +19,8 @@ import OrderStatus from './components/ui/OrderStatus'
 import { useUserStore } from './store/useUseStore'
 import { useEffect } from 'react'
 import Loading from './components/ui/Loading'
+import { useThemeStore } from './store/UseThemeStore'
+
 const AdminRoute=({children}:{children:React.ReactNode})=>{
   const {user,isAuthenticated}=useUserStore();
   if(!isAuthenticated){
@@ -92,7 +94,10 @@ const appRouter = createBrowserRouter([
       }
     ]
   },
-
+  {
+    path:'/order/status',
+    element:<ProtectedRoute><OrderStatus/></ProtectedRoute>
+  },
   {
     path: '/login',
     element: <AuthenticatedRoute><Login /></AuthenticatedRoute>
@@ -119,9 +124,11 @@ const appRouter = createBrowserRouter([
 function App() {
   //checking auth everytimes when page is loaded
   const {checkAuth,isCheckingAuth}=useUserStore();
+  const { initializeTheme } = useThemeStore();
   useEffect(()=>{
     checkAuth();
-  },[checkAuth]);
+    initializeTheme();
+  },[checkAuth, initializeTheme]);
   if(isCheckingAuth){
     return <Loading/>
   }

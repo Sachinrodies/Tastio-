@@ -21,7 +21,6 @@ export const addMenu=async(req:Request,res:Response)=>{
         }
         res.status(201).json({message:"Menu added successfully",menu});
     } catch (error) {
-        console.log(error);
         res.status(500).json({message:"Internal server error"});
     }
 }
@@ -46,7 +45,6 @@ export const editMenu=async(req:Request,res:Response)=>{
         await menu.save();
         res.status(200).json({message:"Menu updated successfully",menu});
     } catch (error) {
-        console.log(error);
         res.status(500).json({message:"Internal server error"});
     }
 }

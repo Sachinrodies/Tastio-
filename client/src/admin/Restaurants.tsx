@@ -109,96 +109,96 @@ const Restaurants = () => {
                 </p>
             </div>
             
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                         {/* Restaurant Name */}
                         <div className="flex flex-col gap-2">
-                            <Label className="text-sm font-medium text-gray-700">Restaurant Name</Label>
+                            <Label className="text-sm font-medium text-gray-700 dark:text-gray-100">Restaurant Name</Label>
                             <Input 
                                 value={formData.restaurantName} 
                                 onChange={changeHandler} 
                                 type="text" 
                                 name="restaurantName" 
                                 placeholder='Enter restaurant name'
-                                className="h-11" 
+                                className="h-11 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700" 
                             />
                             {errors.restaurantName && 
-                                <span className="text-xs text-red-600 font-medium">{errors.restaurantName}</span>
+                                <span className="text-xs text-red-600 font-medium dark:text-red-400">{errors.restaurantName}</span>
                             }
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <Label className="text-sm font-medium text-gray-700">City</Label>
+                            <Label className="text-sm font-medium text-gray-700 dark:text-gray-100">City</Label>
                             <Input 
                                 value={formData.city} 
                                 onChange={changeHandler} 
                                 type="text" 
                                 name="city" 
                                 placeholder='Enter city'
-                                className="h-11" 
+                                className="h-11 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700" 
                             />
                             {errors.city && 
-                                <span className="text-xs text-red-600 font-medium">{errors.city}</span>
+                                <span className="text-xs text-red-600 font-medium dark:text-red-400">{errors.city}</span>
                             }
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <Label className="text-sm font-medium text-gray-700">Country</Label>
+                            <Label className="text-sm font-medium text-gray-700 dark:text-gray-100">Country</Label>
                             <Input 
                                 value={formData.country} 
                                 onChange={changeHandler} 
                                 type="text" 
                                 name="country" 
                                 placeholder='Enter country'
-                                className="h-11" 
+                                className="h-11 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700" 
                             />
                             {errors.country && 
-                                <span className="text-xs text-red-600 font-medium">{errors.country}</span>
+                                <span className="text-xs text-red-600 font-medium dark:text-red-400">{errors.country}</span>
                             }
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <Label className="text-sm font-medium text-gray-700">Delivery Time (minutes)</Label>
+                            <Label className="text-sm font-medium text-gray-700 dark:text-gray-100">Delivery Time (minutes)</Label>
                             <Input 
                                 value={formData.deliveryTime} 
                                 onChange={changeHandler} 
                                 type="number" 
                                 name="deliveryTime" 
                                 placeholder='Enter delivery time'
-                                className="h-11" 
+                                className="h-11 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700" 
                             />
                             {errors.deliveryTime && 
-                                <span className="text-xs text-red-600 font-medium">{errors.deliveryTime}</span>
+                                <span className="text-xs text-red-600 font-medium dark:text-red-400">{errors.deliveryTime}</span>
                             }
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <Label className="text-sm font-medium text-gray-700">Cuisine</Label>
+                            <Label className="text-sm font-medium text-gray-700 dark:text-gray-100">Cuisine</Label>
                             <Input 
                                 value={formData.cuisine} 
                                 onChange={(e)=>setFormData({...formData,cuisine:e.target.value.split(",")})} 
                                 type="text" 
                                 name="cuisine" 
                                 placeholder='e.g Momos, Pizza, Burger'
-                                className="h-11" 
+                                className="h-11 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700" 
                             />
                             {errors.cuisine && 
-                                <span className="text-xs text-red-600">{errors.cuisine}</span>
+                                <span className="text-xs text-red-600 dark:text-red-400">{errors.cuisine}</span>
                             }
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <Label className="text-sm font-medium text-gray-700">Restaurant Image</Label>
+                            <Label className="text-sm font-medium text-gray-700 dark:text-gray-100">Restaurant Image</Label>
                             <Input
                                 onChange={e => setFormData({ ...formData, image: (e.target as HTMLInputElement).files?.[0] })}
                                 type="file"
                                 name="image"
-                                className="h-11"
+                                className="h-11 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700"
                                 accept="image/*"
                             />
                             {errors.image && 
-                                <span className="text-xs text-red-600">{errors.image?.name || "Image file is required"}</span>
+                                <span className="text-xs text-red-600 dark:text-red-400">{errors.image?.name || "Image file is required"}</span>
                             }
                         </div>
                     </div>
