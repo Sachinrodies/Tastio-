@@ -8,11 +8,11 @@ import cookieParser from "cookie-parser";
 import menuRoutes from "./routes/menu.route";
 import orderRoutes from "./routes/order.route";
 import cors from "cors";
-import path from "path";
+
 dotenv.config();
 const app = express();
 
-const __dirname = path.resolve();
+
 const PORT = process.env.PORT || 8001
 
 //default middleware for  every mern stack
@@ -26,20 +26,10 @@ const corsOptions={
 }
 app.use(cors(corsOptions));
 
-
-
 app.use("/api/v1/user", userRoutes);   
 app.use("/api/v1/restaurant", restaurantRoutes);
 app.use("/api/v1/menu", menuRoutes);
 app.use("/api/v1/order", orderRoutes);
-app.use(express.static(path.join(__dirname, "client/dist")));
-app.use("*",(req,res)=>{
-    res.sendFile(path.join(__dirname, "client/dist", "index.html"));
-})
-
-
-
-
 
 
 app.listen(PORT, () => {
