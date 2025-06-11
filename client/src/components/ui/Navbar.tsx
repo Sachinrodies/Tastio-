@@ -133,6 +133,7 @@ export default Navbar
 const MobileNavbar = () => {
   const { logout, loading, user } = useUserStore();
   const {setTheme}=useThemeStore()
+  const {cartItems}=useCartStore()
 
   return (
     <Sheet>
@@ -178,7 +179,7 @@ const MobileNavbar = () => {
           </Link>
           <Link to="/cart" className="flex items-center gap-4 hover:bg-gray-200  px-2 py-2 rounded-lg cursor-pointer hover:text-gray-900 font-medium ">
             <ShoppingCart />
-            <span>Cart(1)</span>
+            <span>Cart({cartItems.length})</span>
 
           </Link>
           {
