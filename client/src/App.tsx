@@ -5,6 +5,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import ForgetPassword from './auth/ForgetPassword'
 import ResetPassword from './auth/ResetPassword'
 import VerifyEmail from './auth/VerifyEmail'
+import Navbar from './components/ui/Navbar'
 import HeroSection from './components/ui/HeroSection'
 import MainLayout from './Layout/MainLayout'
 import Profile from './components/ui/Profile'
@@ -123,11 +124,11 @@ const appRouter = createBrowserRouter([
 function App() {
   //checking auth everytimes when page is loaded
   const {checkAuth,isCheckingAuth}=useUserStore();
-  const { setTheme } = useThemeStore();
+  const { initializeTheme } = useThemeStore();
   useEffect(()=>{
     checkAuth();
-    setTheme('light');
-  },[checkAuth, setTheme]);
+    initializeTheme();
+  },[checkAuth, initializeTheme]);
   if(isCheckingAuth){
     return <Loading/>
   }
