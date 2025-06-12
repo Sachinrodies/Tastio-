@@ -1,4 +1,4 @@
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 export interface IUser{
     fullname:string;
     email:string;

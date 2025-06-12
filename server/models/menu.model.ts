@@ -1,4 +1,4 @@
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 export interface IMenu{
     // _id:mongoose.Schema.Types.ObjectId;
     name:string;
