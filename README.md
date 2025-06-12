@@ -92,7 +92,7 @@ cd server
 npm run dev
 ```
 
-The frontend will be available at `http://localhost:5173` and the backend at `http://localhost:3000`.
+The frontend will be available at `https://tastio-4.onrender.com` and the backend at `https://tastio-4.onrender.com/api/v1`.
 
 ## 🔧 Configuration
 
