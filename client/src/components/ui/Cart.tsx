@@ -1,4 +1,4 @@
-import { Minus, Plus, User } from "lucide-react"
+import { Minus, Plus } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar"
 import { Button } from "./button"
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./table"

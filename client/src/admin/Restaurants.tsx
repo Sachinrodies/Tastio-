@@ -6,7 +6,6 @@ import { RestaurantSchema, type RestaurantSchemaType } from '@/schema/Restaurant
 import { useRestaurantStore } from '@/store/useRestaurantStore'
 import { Loader2 } from 'lucide-react'
 import React, { useState } from 'react'
-import { toast } from 'sonner'
 
 
 

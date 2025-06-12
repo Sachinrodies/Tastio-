@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Loader2, Mail } from "lucide-react"
-import { useState } from "react"
 import { Link } from "react-router-dom"
 
 const ForgetPassword = () => {
-    const [email,setEmail]=useState<string>("")
+    // const [email, setEmail] = useState<string>("")
     const loading:boolean=false;
   return (
     <div className="flex items-center justify-center w-full min-h-screen">
@@ -16,7 +15,7 @@ const ForgetPassword = () => {
 
             </div>
             <div className="relative  w-full">
-                <Input type="text" onChange={(e)=>setEmail(e.target.value)} 
+                <Input type="text" 
                 placeholder="Email" className="pl-10  "/>
                 <Mail className="absolute inset-y-2 left-2 text-gray-600 pointer-events-none" />
             </div>

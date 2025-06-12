@@ -1,14 +1,12 @@
 import { HandPlatter, Menu, PackageCheck, SquareMenu, User, UtensilsCrossed } from "lucide-react";
 import { Button } from "./button"
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./sheet"
-import { Loader2, LogIn, LogOut, ShoppingCart, Sun } from "lucide-react";
+import { Loader2, ShoppingCart, Sun } from "lucide-react";
 import { Link } from "react-router-dom"
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from "./menubar";
 import { Moon } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
-import { Label } from "./label"
-import { Input } from "./input"
 import { useCartStore } from "../../store/useCartStore";
 import { useUserStore } from "../../store/useUseStore";
 import { Separator } from "./separator"

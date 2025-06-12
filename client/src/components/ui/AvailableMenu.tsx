@@ -1,5 +1,5 @@
 import { Button } from "./button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./card"
+import { Card, CardContent, CardFooter } from "./card"
 import image from "@/assets/restaurant.jpg"
 import { Skeleton } from "./skeleton"
 import { useCartStore } from "@/store/useCartStore";

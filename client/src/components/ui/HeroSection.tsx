@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Input } from './input'
 import { Search } from 'lucide-react'
 import { Button } from './button'

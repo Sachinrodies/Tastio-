@@ -1,4 +1,4 @@
-import image from "@/assets/restaurant.jpg"
+// import image from "@/assets/restaurant.jpg"
 import { Badge } from "./badge"
 import { Timer } from "lucide-react"
 import AvailableMenu from "./AvailableMenu"
@@ -6,7 +6,7 @@ import { useRestaurantStore } from "@/store/useRestaurantStore"
 import { useParams } from "react-router-dom"
 import { useEffect } from "react"
 import { useUserStore } from "@/store/useUseStore"
-import { toast } from "sonner"
+// import { toast } from "sonner"
 
 const RestaurantDetails = () => {
     const {singleRestaurant, getSingleRestaurant, loading}=useRestaurantStore()

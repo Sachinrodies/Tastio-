@@ -8,6 +8,8 @@ import cookieParser from "cookie-parser";
 import menuRoutes from "./routes/menu.route";
 import orderRoutes from "./routes/order.route";
 import cors from "cors";
+import path from "path";
+const DIRNAME = path.resolve();
 
 const app = express();
 
@@ -16,7 +18,7 @@ dotenv.config();
 
 
 
-const PORT = process.env.PORT || 8001
+const PORT = process.env.PORT || 3000
 
 //default middleware for  every mern stack
 app.use(bodyParser.json({limit:"10mb"}));
@@ -33,6 +35,12 @@ app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/restaurant", restaurantRoutes);
 app.use("/api/v1/menu", menuRoutes);
 app.use("/api/v1/order", orderRoutes);
+app.use(express.static(path.join(DIRNAME,"/client/dist")));
+
+// Serve index.html for all other routes
+app.get(/^(?!\/api\/v1).*/, (_, res) => {
+    res.sendFile(path.resolve(DIRNAME, "client", "dist", "index.html"));
+});
 
 
 

@@ -1,11 +1,11 @@
 import image from "@/assets/hero_pizza.png"
-import { ArrowLeft, IndianRupee } from "lucide-react";
+import { IndianRupee } from "lucide-react";
 import { Separator } from "./separator";
 import { Button } from "./button";
 import { Link } from "react-router-dom";
 import { useOrderStore } from "@/store/UseOrderStore";
 import { useEffect } from "react";
-import type { OrderState } from "@/types/OrderType";
+// import type { OrderState } from "@/types/OrderType";
 
 const OrderStatus = () => {
     const {orders, loading, getOrders} = useOrderStore()

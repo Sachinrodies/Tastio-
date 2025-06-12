@@ -7,7 +7,6 @@ import { Badge } from './badge';
 import { Globe, X } from 'lucide-react';
 import { Card, CardContent, CardFooter } from './card';
 import { AspectRatio } from './aspect-ratio';
-import hero from "@/assets/hero_pizza.png"
 import { MapPin } from 'lucide-react';
 import { Skeleton } from './skeleton';
 import { useRestaurantStore } from '@/store/useRestaurantStore';
@@ -253,25 +252,6 @@ const SearchPageSkeleton = () => {
                     </div>
                 </div>
             </div>
-        </div>
-    );
-};
-
-const NoResultFound = ({ searchText }: { searchText: string }) => {
-    return (
-        <div className="max-w-7xl mx-auto my-10 text-center">
-            <h1 className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                No results found
-            </h1>
-            <p className="mt-2 text-gray-500 dark:text-gray-400">
-                We couldn't find any results for "{searchText}". <br /> Try searching
-                with a different term.
-            </p>
-            <Link to="/">
-                <Button className="mt-4 bg-[#D19254] hover:bg-[#d18c47]">
-                    Go Back to Home
-                </Button>
-            </Link>
         </div>
     );
 };

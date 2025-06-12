@@ -2,10 +2,9 @@ import axios from "axios";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { toast } from "sonner";
-import { Value } from "@radix-ui/react-select";
-import type { RestaurantStore, Restaurant } from "@/types/restaurantType.ts";
+import type { RestaurantStore } from "@/types/restaurantType.ts";
 
-const API_END_POINT="http://localhost:8001/api/v1/restaurant"
+const API_END_POINT="http://localhost:8000/api/v1/restaurant"
 axios.defaults.withCredentials=true;
 
 // Initialize state from localStorage if available
@@ -193,10 +192,12 @@ export const useRestaurantStore = create<RestaurantStore>()(persist((set,get)=>(
     setAppliedFilters:async(filters:string)=>{
         set((state)=>{
             const alreadyAppliedFilters=state.appliedFilters.includes(filters);
-            const updatedFilters=alreadyAppliedFilters ? state.appliedFilters.filter((filter:string)=>filter!==filters) : [...state.appliedFilters, filters];
+            const updatedFilters = alreadyAppliedFilters 
+                ? state.appliedFilters.filter((filter: string) => filter !== filters) 
+                : [...state.appliedFilters, filters];
             return {
                 ...state,
-                appliedFilters: alreadyAppliedFilters ? state.appliedFilters.filter((filter:string)=>filter!==filters) : [...state.appliedFilters, filters]
+                appliedFilters: updatedFilters
             };
         })
     },

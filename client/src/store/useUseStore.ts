@@ -4,15 +4,12 @@ import axios from "axios";
 import type { UserSignupSchemaType,UserLoginSchemaType } from "@/schema/userSchema";
 import { toast } from "sonner";
 
-interface UserStore {
-  user: null | any;
-  isAuthenticated: boolean;
-  isCheckingAuth: boolean;
-  loading: boolean;
-  signup: (userData: UserSignupSchemaType) => Promise<void>;
-}
+// Remove unused interface
+// interface UserStore {
+//   ...
+// }
 
-const API_URL="http://localhost:8001/api/v1/user";
+const API_URL="http://localhost:8000/api/v1/user";
 axios.defaults.withCredentials=true;
 type User={
     _id: string;

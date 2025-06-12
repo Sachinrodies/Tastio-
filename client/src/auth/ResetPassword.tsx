@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Loader2, LockKeyhole, Mail } from "lucide-react"
-import { useState } from "react"
+import { Loader2, LockKeyhole } from "lucide-react"
 import { Link } from "react-router-dom"
 
 const ResetPassword = () => {
-    const [password,setPassword]=useState<string>("")
     const loading:boolean=false;
   return (
     <div className="flex items-center justify-center w-full min-h-screen">
@@ -16,8 +14,7 @@ const ResetPassword = () => {
 
             </div>
             <div className="relative  w-full">
-                <Input type="password" onChange={(e)=>setPassword(e.target.value)} 
-                placeholder="Password" className="pl-10  "/>
+                <Input type="password" placeholder="Password" className="pl-10  "/>
                 <LockKeyhole className="absolute inset-y-2 left-2 text-gray-600 pointer-events-none" />
             </div>
             {

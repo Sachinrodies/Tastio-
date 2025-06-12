@@ -94,7 +94,7 @@ const Profile = () => {
                             src={profileImage} 
                             alt={formData.fullname} 
                             className="w-full h-full object-cover rounded-full"
-                            onError={(e) => {
+                            onError={(_) => {
                                 setProfileImage(user?.profilePicture || "");
                             }}
                         />

@@ -1,4 +1,4 @@
-import type { CartState, cartItem } from "@/types/CartType";
+import type { CartState } from "@/types/CartType";
 import type { MenuItem } from "@/types/restaurantType";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";

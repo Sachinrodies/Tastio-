@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useRestaurantStore } from '@/store/useRestaurantStore'
-import { useParams } from 'react-router-dom'
 
 // Define the correct type for a restaurant order
 interface RestaurantOrder {

@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { EditIcon, Loader2, PlusIcon } from 'lucide-react'
 import React, { useState, useEffect } from 'react'
-import MenuImage from "@/assets/menu2.jpg"
 import EditMenu from './EditMenu'
 import type { MenuSchemaType } from '@/schema/MenuSchema'
 import { MenuSchema } from '@/schema/MenuSchema'
@@ -14,30 +13,6 @@ import { toast } from 'sonner'
 import { useRestaurantStore } from '@/store/useRestaurantStore'
 
 type MenuWithId = MenuSchemaType & { _id: string };
-
-const MenuData = [
-    {
-        id: 1,
-        name: "Biryani",
-        description: "Biryani is a delicious dish that is made with rice and meat.",
-        price: 80,
-        image: MenuImage
-    },
-    {
-        id: 2,
-        name: "Biryani",
-        description: "Biryani is a delicious dish that is made with rice and meat.",
-        price: 80,
-        image: MenuImage
-    },
-    {
-        id: 3,
-        name: "Biryani",
-        description: "Biryani is a delicious dish that is made with rice and meat.",
-        price: 80,
-        image: MenuImage
-    }
-]
 
 const AddMenu = () => {
     const [input, setInput] = useState<MenuSchemaType>({
@@ -196,7 +171,7 @@ const AddMenu = () => {
             {restaurant && restaurant.menus &&
               restaurant.menus
                 .filter((item: any) => item && item._id && item.name && item.price && item.imageUrl)
-                .map((item: any, idx: number) => (
+                .map((item: any) => (
                   <div className="mt-6 space-y-4" key={item._id}>
                     <div className="flex flex-col md:flex-row md:items-center md:space-x-4 md:p-4 p-2 shadow-md rounded-lg border">
                       <div className="w-full md:w-64 flex-shrink-0">

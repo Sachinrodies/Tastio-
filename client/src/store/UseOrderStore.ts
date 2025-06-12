@@ -4,7 +4,7 @@ import type { CheckoutSessionResponse } from "@/types/OrderType"
 import axios from "axios"
 
 import { toast } from "sonner"
-const API_END_POINT ="http://localhost:8001/api/v1/order"
+const API_END_POINT ="http://localhost:8000/api/v1/order"
 
 interface OrderState {
   loading: boolean;
@@ -15,7 +15,7 @@ interface OrderState {
 
 export const useOrderStore = create<OrderState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       loading: false,
       orders: [],
       createCheckoutSession: async (checkoutData: CheckoutSessionResponse) => {
