@@ -219,16 +219,17 @@ export const useRestaurantStore = create<RestaurantStore>()(persist((set,get)=>(
             set({loading:false});
         }
     },
-    getRestaurantOrders:async(id:string)=>{
-        try{
-            const response=await axios.get(`${API_END_POINT}/order/${id}`);     
-            set({restaurantOrders:response.data.orders});
-        }catch(error:any){
-            toast.error(error.response?.data?.message || 'Failed to fetch restaurant orders');
-        }finally{
-            set({loading:false});
-        }
-    },
+ getRestaurantOrders: async (restaurantId) => {
+  try {
+    console.log("Fetching orders for restaurant:", restaurantId); // ✅ Request sent
+    const res = await axios.get(`/api/orders/restaurant/${restaurantId}`);
+    console.log("Orders fetched:", res.data); // ✅ Response received
+    set({ restaurantOrders: res.data });
+  } catch (err) {
+    console.error("Error fetching orders:", err); // ❌ Show any fetch errors
+  }
+}
+,
     updateRestaurantOrders:async(id:string,order:any)=>{
         try{
             const response=await axios.put(`${API_END_POINT}/order/${id}`,order,
