@@ -4,7 +4,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { toast } from "sonner";
 import type { RestaurantStore } from "@/types/restaurantType.ts";
 
-const API_END_POINT="https://tastio-4.onrender.com/api/v1/restaurant"
+const API_END_POINT="http://localhost:8000/api/v1/restaurant"
 axios.defaults.withCredentials=true;
 
 // Initialize state from localStorage if available

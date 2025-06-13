@@ -9,7 +9,7 @@ import { toast } from "sonner";
 //   ...
 // }
 
-const API_URL="https://tastio-4.onrender.com/api/v1/user";
+const API_URL="http://localhost:8000/api/v1/user";
 axios.defaults.withCredentials=true;
 type User={
     _id: string;
